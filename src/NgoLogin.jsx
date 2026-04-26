@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { auth } from "./firebase";
 import {
 signInWithEmailAndPassword
@@ -7,16 +7,21 @@ import { useNavigate } from "react-router-dom";
 
 function NgoLogin() {
 
-const [email,setEmail] =
-useState("");
-
-const [password,setPassword] =
-useState("");
+const [email,setEmail] = useState("");
+const [password,setPassword] = useState("");
 
 const navigate = useNavigate();
 
-const handleLogin =
-async () => {
+/* NEW FIX */
+useEffect(() => {
+
+if(auth.currentUser){
+navigate("/ngo", { replace:true });
+}
+
+}, []);
+
+const handleLogin = async () => {
 
 try {
 
@@ -28,7 +33,7 @@ password
 
 alert("Login Success 🔥");
 
-navigate("/ngo", { replace: true });
+navigate("/ngo", { replace:true });
 
 } catch(err) {
 
@@ -60,9 +65,7 @@ setPassword(e.target.value)
 }
 />
 
-<button
-onClick={handleLogin}
->
+<button onClick={handleLogin}>
 Login
 </button>
 
