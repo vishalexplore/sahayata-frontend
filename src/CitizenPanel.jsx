@@ -123,13 +123,33 @@ message
 
         <h2>Sahayata Citizen</h2>
 
-        <button onClick={() => setPage("home")}>🏠 Home</button>
+        <button onClick={() => {
+setPage("home");
+setMenuOpen(false);
+}}>
+🏠 Home
+</button>
 
-        <button onClick={() => setPage("complaint")}>📢 Complaint</button>
+<button onClick={() => {
+setPage("complaint");
+setMenuOpen(false);
+}}>
+📢 Complaint
+</button>
 
-        <button onClick={() => setPage("track")}>📍 Track</button>
+<button onClick={() => {
+setPage("track");
+setMenuOpen(false);
+}}>
+📍 Track
+</button>
 
-        <button onClick={() => setPage("help")}>☎ Help</button>
+<button onClick={() => {
+setPage("help");
+setMenuOpen(false);
+}}>
+☎ Help
+</button>
 
       </div>
 

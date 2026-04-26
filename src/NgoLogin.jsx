@@ -28,7 +28,7 @@ password
 
 alert("Login Success 🔥");
 
-navigate("/ngo");
+navigate("/ngo", { replace: true });
 
 } catch(err) {
 
