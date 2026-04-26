@@ -2,7 +2,6 @@ import { BrowserRouter, Routes, Route, Link, useNavigate } from "react-router-do
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { auth } from "./firebase";
-import { auth } from "./firebase";
 import {
 signInWithEmailAndPassword
 } from "firebase/auth";
