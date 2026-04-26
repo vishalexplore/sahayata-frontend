@@ -34,7 +34,7 @@ const [showNoticeForm, setShowNoticeForm] = useState(false);
   const [cases, setCases] = useState([]);
 
 useEffect(() => {
- fetch("http://127.0.0.1:5000/api/complaints")
+ fetch("https://sahayata-backend-dcpd.onrender.com/api/complaints")
  .then(res => res.json())
  .then(data => setCases(data));
 }, []);

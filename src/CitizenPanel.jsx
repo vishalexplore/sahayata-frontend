@@ -16,7 +16,7 @@ function CitizenPanel() {
 
   const [complaints, setComplaints] = useState([]);
   useEffect(() => {
-  fetch("http://127.0.0.1:5000/api/complaints")
+  fetch("https://sahayata-backend-dcpd.onrender.com/api/complaints")
     .then((res) => res.json())
     .then((data) => {
       console.log(data);
@@ -73,7 +73,7 @@ message
 };
 
     const res = await fetch(
-      "http://127.0.0.1:5000/api/complaints",
+      "https://sahayata-backend-dcpd.onrender.com/api/complaints",
       {
         method:"POST",
         headers:{
@@ -92,7 +92,7 @@ message
 
     // reload complaints
     const reload = await fetch(
-      "http://127.0.0.1:5000/api/complaints"
+      "https://sahayata-backend-dcpd.onrender.com/api/complaints"
     );
 
     const updated =
@@ -200,7 +200,7 @@ background:"#dc2626"
 onClick={async () => {
 
 await fetch(
-"http://127.0.0.1:5000/api/complaints",
+"https://sahayata-backend-dcpd.onrender.com/api/complaints",
 {
 method:"POST",
 headers:{
