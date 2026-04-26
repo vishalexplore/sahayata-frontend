@@ -601,13 +601,20 @@ display:block;
 }
 
 .sidebar{
-position:fixed;
-left:-100%;
-top:0;
-height:100%;
-z-index:1000;
-transition:0.3s;
-overflow-y:auto;
+position: fixed;
+top: 0;
+left: -260px;
+width: 250px;
+height: 100%;
+background: #111827;
+padding: 20px;
+transition: 0.3s;
+z-index: 1000;
+overflow-y: auto;
+}
+
+.sidebar.show{
+left: 0;
 }
 
 .sidebar.show{
@@ -615,13 +622,24 @@ left:0;
 }
 
 .content{
-width:100%;
-padding:20px;
-margin-left:0;
+width: 100%;
+padding: 20px;
+min-height: 100vh;
+overflow-x: hidden;
 }
 
 .cards{
 grid-template-columns:1fr;
 }
 
+}
+.menuBtn{
+position: fixed;
+top: 15px;
+left: 15px;
+z-index: 1100;
+padding: 10px 14px;
+border: none;
+border-radius: 8px;
+cursor: pointer;
 }
