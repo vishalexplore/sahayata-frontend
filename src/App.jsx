@@ -1,168 +1,170 @@
-import { BrowserRouter, Routes, Route, Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link, useNavigate, Navigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { auth } from "./firebase";
 import {
-signInWithEmailAndPassword
+signInWithEmailAndPassword,
+onAuthStateChanged
 } from "firebase/auth";
+
 import NgoDashboard from "./NgoDashboard";
 import CitizenPanel from "./CitizenPanel";
 
 /* Home */
 function Home() {
-  return (
-    <div className="content" style={{padding:"60px"}}>
-      <h1>Welcome to Sahayata</h1>
-      <br />
+return (
+<div className="content" style={{padding:"60px"}}>
+<h1>Welcome to Sahayata</h1>
 
-      <div className="cards">
+<div className="cards">
 
-        <div className="card">
-          <h3>NGO Portal</h3>
-          <br />
-          <Link to="/ngo-login">
-            <button className="action">Login as NGO</button>
-          </Link>
-        </div>
+<div className="card">
+<h3>NGO Portal</h3>
+<Link to="/ngo-login">
+<button className="action">Login as NGO</button>
+</Link>
+</div>
 
-        <div className="card">
-          <h3>Citizen Portal</h3>
-          <br />
-          <Link to="/citizen-login">
-            <button className="action">Login as Citizen</button>
-          </Link>
-        </div>
+<div className="card">
+<h3>Citizen Portal</h3>
+<Link to="/citizen-login">
+<button className="action">Login as Citizen</button>
+</Link>
+</div>
 
-      </div>
-    </div>
-  );
+</div>
+</div>
+);
 }
 
 /* NGO Login */
 function NgoLogin() {
-  const navigate = useNavigate();
 
-  const [email,setEmail] = useState("");
-  const [pass,setPass] = useState("");
-  const [error,setError] = useState("");
+const navigate = useNavigate();
 
-  const login = async () => {
+const [email,setEmail] = useState("");
+const [pass,setPass] = useState("");
+const [error,setError] = useState("");
 
-    try {
+const login = async () => {
 
-      await signInWithEmailAndPassword(
-        auth,
-        email,
-        pass
-      );
+try{
+await signInWithEmailAndPassword(auth,email,pass);
+navigate("/ngo",{replace:true});
+}catch{
+setError("Invalid NGO Credentials");
+}
 
-      navigate("/ngo");
+};
 
-    } catch(err) {
+return (
+<div className="content">
+<h1>NGO Login</h1>
 
-      setError("Invalid NGO Credentials");
+<div className="card form">
 
-    }
+<input className="input" placeholder="Email"
+value={email}
+onChange={(e)=>setEmail(e.target.value)}
+/>
 
-  };
+<input className="input" type="password"
+placeholder="Password"
+value={pass}
+onChange={(e)=>setPass(e.target.value)}
+/>
 
-  return (
-    <div className="content">
-      <h1>NGO Login</h1>
+<button className="action" onClick={login}>
+Login
+</button>
 
-      <div className="card form">
+<p className="high">{error}</p>
 
-        <input
-          className="input"
-          placeholder="Email"
-          value={email}
-          onChange={(e)=>setEmail(e.target.value)}
-        />
-
-        <input
-          className="input"
-          type="password"
-          placeholder="Password"
-          value={pass}
-          onChange={(e)=>setPass(e.target.value)}
-        />
-
-        <button
-          className="action"
-          onClick={login}
-        >
-          Login
-        </button>
-
-        <p className="high">{error}</p>
-
-      </div>
-    </div>
-  );
+</div>
+</div>
+);
 }
 
 /* Citizen Login */
-function CitizenLogin() {
-  const navigate = useNavigate();
+function CitizenLogin(){
 
-  const [mobile,setMobile] = useState("");
-  const [pass,setPass] = useState("");
-  const [error,setError] = useState("");
+const navigate = useNavigate();
 
-  const login = () => {
-    if(mobile === "9999999999" && pass === "1234"){
-      navigate("/citizen");
-    }else{
-      setError("Invalid Citizen Credentials");
-    }
-  };
+const [mobile,setMobile] = useState("");
+const [pass,setPass] = useState("");
+const [error,setError] = useState("");
 
-  return (
-    <div className="content">
-      <h1>Citizen Login</h1>
+const login = () => {
 
-      <div className="card form">
-        <input
-          className="input"
-          placeholder="Mobile Number"
-          onChange={(e)=>setMobile(e.target.value)}
-        />
-
-        <input
-          className="input"
-          type="password"
-          placeholder="Password"
-          onChange={(e)=>setPass(e.target.value)}
-        />
-
-        <button className="action" onClick={login}>
-          Login
-        </button>
-
-        <p className="high">{error}</p>
-      </div>
-    </div>
-  );
+if(mobile==="9999999999" && pass==="1234"){
+navigate("/citizen");
+}else{
+setError("Invalid Citizen Credentials");
 }
-function ProtectedRoute({ children }) {
-  const user = auth.currentUser;
 
-  return user
-    ? children
-    : <Navigate to="/ngo-login" replace />;
+};
+
+return (
+<div className="content">
+<h1>Citizen Login</h1>
+
+<div className="card form">
+
+<input className="input"
+placeholder="Mobile Number"
+onChange={(e)=>setMobile(e.target.value)}
+/>
+
+<input className="input"
+type="password"
+placeholder="Password"
+onChange={(e)=>setPass(e.target.value)}
+/>
+
+<button className="action" onClick={login}>
+Login
+</button>
+
+<p className="high">{error}</p>
+
+</div>
+</div>
+);
 }
+
 /* Main */
-function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
+function App(){
 
-        <Route path="/" element={<Home />} />
+const [user,setUser] = useState(null);
+const [loading,setLoading] = useState(true);
 
-        <Route path="/ngo-login" element={<NgoLogin />} />
-        <Route path="/citizen-login" element={<CitizenLogin />} />
+useEffect(()=>{
 
-        <Route
+const unsub = onAuthStateChanged(auth,(currentUser)=>{
+setUser(currentUser);
+setLoading(false);
+});
+
+return ()=>unsub();
+
+},[]);
+
+if(loading){
+return <h2 style={{padding:"40px"}}>Loading...</h2>;
+}
+
+function ProtectedRoute({children}){
+return user ? children : <Navigate to="/ngo-login" replace />;
+}
+
+return(
+<BrowserRouter>
+<Routes>
+
+<Route path="/" element={<Home />} />
+<Route path="/ngo-login" element={<NgoLogin />} />
+<Route path="/citizen-login" element={<CitizenLogin />} />
+
+<Route
 path="/ngo"
 element={
 <ProtectedRoute>
@@ -170,11 +172,12 @@ element={
 </ProtectedRoute>
 }
 />
-        <Route path="/citizen" element={<CitizenPanel />} />
 
-      </Routes>
-    </BrowserRouter>
-  );
+<Route path="/citizen" element={<CitizenPanel />} />
+
+</Routes>
+</BrowserRouter>
+);
 }
 
 export default App;
