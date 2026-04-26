@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route, Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { Navigate } from "react-router-dom";
+import { auth } from "./firebase";
 import { auth } from "./firebase";
 import {
 signInWithEmailAndPassword
@@ -143,7 +145,13 @@ function CitizenLogin() {
     </div>
   );
 }
+function ProtectedRoute({ children }) {
+  const user = auth.currentUser;
 
+  return user
+    ? children
+    : <Navigate to="/ngo-login" replace />;
+}
 /* Main */
 function App() {
   return (
@@ -155,7 +163,14 @@ function App() {
         <Route path="/ngo-login" element={<NgoLogin />} />
         <Route path="/citizen-login" element={<CitizenLogin />} />
 
-        <Route path="/ngo" element={<NgoDashboard />} />
+        <Route
+path="/ngo"
+element={
+<ProtectedRoute>
+<NgoDashboard />
+</ProtectedRoute>
+}
+/>
         <Route path="/citizen" element={<CitizenPanel />} />
 
       </Routes>
